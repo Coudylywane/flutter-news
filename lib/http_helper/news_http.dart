@@ -19,13 +19,16 @@ class NewsHttp {
     return list;
   }
 
-  getNewsById(int id) async {
-    var response = await _dio.get('$baseUrl/news/$id');
-    if (response.statusCode == 200) {
-      print(response.data);
-    }
-    return NewsModel();
+Future<NewsModel> getNewsById(int id) async {
+  final response = await _dio.get('$baseUrl/news/$id');
+  if (response.statusCode == 200) {
+    final newsModel = NewsModel.fromJson(response.data);
+    return newsModel;
+  } else {
+    return NewsModel(); 
   }
+  }
+
 
   createNews(data) async {
     var response = await _dio.post('$baseUrl/news', data: data);
@@ -37,10 +40,9 @@ class NewsHttp {
   deleteNews(int id) async {
     var response = await _dio.delete('$baseUrl/news/$id');
     if (response.statusCode == 200) {
-           getNews();
-     }
-   }
-
+      getNews();
+    }
+  }
 
   updateNews(int id, newData) async {
     var response = await _dio.put('$baseUrl/news/$id', data: newData);
